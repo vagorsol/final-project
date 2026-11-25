@@ -29,29 +29,34 @@ For getting the HDA set up, I will be referencing the [**procedural house**](htt
 - **Milestone 2** (11/23): Creation of decoration assets, start of placement logic
 - **Final Submission** (11/30): Finish placement logic, polish
 
----
+## Milestone 1: Cake HDA
+<img width=350 src="images/m1_img1.png">
 
-## Milestone 1: Implementation part 1 (due 11/11)
-Begin implementing your engine! Don't worry too much about polish or parameter tuning -- this week is about getting together the bulk of your generator implemented. By the end of the week, even if your visuals are crude, the majority of your generator's functionality should be done.
+I implemented the cake HDA and it's core parameters. Currently, there are parameters for the cake's dimensions, as well as specifications for the cake layer and cream.
 
-Put all your code in your forked repository.
+The cake is constructed as such:
+1. A circle is drawn, its `arc angle` determined by a parameter ("Cake Amount").
+2. The circle is extruded by the "Cake Layer Thickness" and beveled
+3. It is copied a number of times equal to the number of layers, separated by the "Filling Thickness."
+4. The cream builds off of the initial circle, first offset by the Edge Cream amount (if applicable).
+5. The offsetted circle is extruded by an amount equal to the height of the cake layers plus the top cream height.
+6. The cream layer is "cut" by the cake layer, to create a gap so that if the cake amount isn't the fullest (i.e., 360 degrees), the cake layer is visible.
+7. All the parts are merged together and colored, and stacked on top of the previous tier (if existing)
 
-Submission: Add a new section to your README titled: Milestone #1, which should include
-- written description of progress on your project goals. If you haven't hit all your goals, what's giving you trouble?
-- Examples of your generators output so far
-We'll check your repository for updates. No need to create a new pull request.
+I also attempted to texture the cake and cream, but ran into the issue of some parts of the cake layer being covered as the texturing results in a surface that is not guaranteed to intersect with the exposed cream. 
 
-## Milestone 2: Implementation part 2 (due 11/23)
-We're over halfway there! This week should be about fixing bugs and extending the core of your generator. Make sure by the end of this week _your generator works and is feature complete._ Any core engine features that don't make it in this week should be cut! Don't worry if you haven't managed to exactly hit your goals. We're more interested in seeing proof of your development effort than knowing your planned everything perfectly. 
+Also, I ran into an issue where not all of the exposed cream would be removed despite the cake layer fully intersecting with it. Currently, I use a "hacky" method of having a separate set of cake layers that is always the full amount of cake (i.e., 360 arc angle) to cut any overlapping cream.
 
-Put all your code in your forked repository.
+## Milestone 2: Texturing; Decorations (Start)
+<img width=350 src="images/m2_img1.png">
 
-Submission: Add a new section to your README titled: Milestone #3, which should include
-- written description of progress on your project goals. If you haven't hit all your goals, what did you have to cut and why? 
-- Detailed output from your generator, images, video, etc.
-We'll check your repository for updates. No need to create a new pull request.
+A large portion of this period was dedicated to working out the kinks of the cake texturing. While not perfect (there is some offset - i.e., it is not a perfectly flush "cut") the "hacky" method to create the space for the untextured cake layers extened to the textured cake layers. I also convered the cake layer creation nodes into an HDA to minimize clutter (through repeated nodes - I attempted a `for each` block, but the use of `METADATA` invalidated this approach.)
 
-Come to class on the due date with a WORKING COPY of your project. We'll be spending time in class critiquing and reviewing your work so far.
+I opted to remove beveling on the icing, as the noise texturing "softens" the edges already (I initially wanted to have uncovered top edges beveled). I also resolved the issue of gaps between the cake tiers by using the `flatten` node on the tops and bottoms of each tier.
+
+I got a small start on decorations - I am going to pare down the scope and focus on top/bottom borders for the time being, though I still hope to be able to implement options of border type.
+
+As can be seen in the demo image, there are slight hitches in the tracing of the borders - namely, with the top border, it doesn't fully adhere to it. Hopefully this can be ironed out by the final submission.
 
 ## Final submission (due 11/30)
 Time to polish! Spen this last week of your project using your generator to produce beautiful output. Add textures, tune parameters, play with colors, play with camera animation. Take the feedback from class critques and use it to take your project to the next level.
